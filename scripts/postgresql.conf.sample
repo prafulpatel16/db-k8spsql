@@ -1,0 +1,83 @@
+#------------------------------------------------------------------------------
+# FILE LOCATIONS
+#------------------------------------------------------------------------------
+
+# Specifies the directory where PostgreSQL will store its configuration files.
+data_directory = '/var/lib/postgresql/12/main'
+
+# Directory for storing configuration files.
+hba_file = '/etc/postgresql/12/main/pg_hba.conf'
+ident_file = '/etc/postgresql/12/main/pg_ident.conf'
+external_pid_file = '/var/run/postgresql/12-main.pid'
+
+#------------------------------------------------------------------------------
+# CONNECTIONS AND AUTHENTICATION
+#------------------------------------------------------------------------------
+
+# Connection settings
+listen_addresses = '*'          # listen on all network interfaces
+port = 5432                     # port number
+
+# Authentication settings
+authentication_timeout = 1min   # how long to wait for authentication before timing out
+password_encryption = 'scram-sha-256'  # password encryption method
+ssl = off                       # SSL connections
+ssl_cert_file = ''              # SSL certificate file
+ssl_key_file = ''               # SSL key file
+ssl_ca_file = ''                # SSL certificate authority file
+ssl_crl_file = ''               # SSL certificate revocation list file
+
+#------------------------------------------------------------------------------
+# RESOURCE USAGE (CPU, MEMORY, DISK)
+#------------------------------------------------------------------------------
+
+# Memory settings
+shared_buffers = 128MB          # memory allocated for shared memory buffers
+work_mem = 4MB                  # memory used for sorts, hashes, and temporary results
+maintenance_work_mem = 64MB     # memory for maintenance operations
+
+# Disk settings
+temp_buffers = 8MB              # memory used by each session for temporary tables
+effective_cache_size = 4GB      # estimated amount of memory available for disk caching
+
+#------------------------------------------------------------------------------
+# WRITE AHEAD LOG (WAL)
+#------------------------------------------------------------------------------
+
+# Write Ahead Log settings
+wal_level = replica             # amount of information written to WAL
+max_wal_size = 1GB             # maximum size of WAL files
+min_wal_size = 80MB             # minimum size of WAL files
+archive_mode = off              # allows archiving of WAL files
+archive_command = ''            # command to execute for archiving WAL files
+wal_keep_segments = 0          # how many WAL files to keep for standby servers
+
+#------------------------------------------------------------------------------
+# REPORTING AND LOGGING
+#------------------------------------------------------------------------------
+
+# Logging settings
+logging_collector = on          # enables logging collector process
+log_directory = 'pg_log'        # directory where log files are written
+log_filename = 'postgresql-%Y-%m-%d_%H%M%S.log'  # log file name pattern
+log_rotation_age = 1d           # automatic log file rotation
+log_rotation_size = 10MB        # maximum size of log file before rotation
+log_min_duration_statement = 0  # minimum execution time for statement to be logged
+log_statement = 'all'           # which SQL statements are logged
+log_connections = on            # log connection attempts
+log_disconnections = on         # log end of a session
+
+#------------------------------------------------------------------------------
+# CLIENT CONNECTION DEFAULTS
+#------------------------------------------------------------------------------
+
+# Timeout settings
+statement_timeout = 0           # maximum time for a statement to complete
+idle_in_transaction_session_timeout = 0  # maximum time for an idle session in a transaction
+lock_timeout = 0                # maximum time to wait for a lock
+
+# Other client defaults
+search_path = 'public'          # schema search path
+default_statistics_target = 100  # planner target for table statistics
+```
+
