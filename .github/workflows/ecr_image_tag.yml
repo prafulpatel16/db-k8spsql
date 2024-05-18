@@ -2,7 +2,6 @@ name: 'Fashion Shop App PostgreSQL Image Build with Tag'
 
 on: 
   push:
-    branches:["main"]
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
   workflow_dispatch:
@@ -35,8 +34,15 @@ jobs:
       # Step 3: Download the latest DB backup to initialize
       - name: Download Latest DB Backup to Initialize
         run: |
+          set -e  # Exit on any error
+          echo "Listing objects in S3 bucket..."
+          aws s3 ls s3://fashionapp-dbbackup/db/ --recursive
           latest_s3_db=$(aws s3 ls s3://fashionapp-dbbackup/db/ --recursive | sort | tail -n 1 | awk '{print $4}')
           echo "Latest S3 DB File: $latest_s3_db"
+          if [ -z "$latest_s3_db" ]; then
+            echo "Error: No files found in S3 bucket."
+            exit 1
+          fi
           aws s3 cp s3://fashionapp-dbbackup/db/$latest_s3_db scripts/db.sql
 
       # Step 4: Log in to Amazon ECR private registry
@@ -56,6 +62,7 @@ jobs:
           ECR_REPOSITORY: ${{ secrets.ECR_REPO }}
           VERSION: ${{ env.VERSION }}
         run: |
+          echo "Building Docker image with tag: $VERSION"
           docker build -t $ECR_REPOSITORY:$VERSION .
           echo "Pushing image to ECR..."
           docker push $ECR_REPOSITORY:$VERSION
