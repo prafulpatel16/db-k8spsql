@@ -43,7 +43,8 @@ jobs:
             echo "Error: No files found in S3 bucket."
             exit 1
           fi
-          aws s3 cp s3://fashionapp-dbbackup/db/$latest_s3_db scripts/db.sql
+          echo "Copying s3://fashionapp-dbbackup/$latest_s3_db to scripts/db.sql"
+          aws s3 cp s3://fashionapp-dbbackup/$latest_s3_db scripts/db.sql
 
       # Step 4: Log in to Amazon ECR private registry
       - name: Login to Amazon ECR private registry
