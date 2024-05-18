@@ -2,6 +2,7 @@ name: 'Fashion Shop App PostgreSQL Image Build with Tag'
 
 on: 
   push:
+    branches:["main"]
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
   workflow_dispatch:
@@ -35,6 +36,7 @@ jobs:
       - name: Download Latest DB Backup to Initialize
         run: |
           latest_s3_db=$(aws s3 ls s3://fashionapp-dbbackup/db/ --recursive | sort | tail -n 1 | awk '{print $4}')
+          echo "Latest S3 DB File: $latest_s3_db"
           aws s3 cp s3://fashionapp-dbbackup/db/$latest_s3_db scripts/db.sql
 
       # Step 4: Log in to Amazon ECR private registry
